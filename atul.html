@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will You Marry Me?</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-image: linear-gradient(to bottom, #3498db, #2980b9);
+        }
+
+        .container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            width: 300px;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .btn {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+        }
+
+        .btn-yes {
+            background-color: #2ecc71;
+            color: #fff;
+        }
+
+        .btn-no {
+            color: #fff;
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+            background-color: #f39c12; /* Yellow color */
+        }
+
+        .btn-no.red-bg {
+            background-color: #e74c3c;
+        }
+
+        .btn-no.green-bg {
+            background-color: #2ecc71;
+        }
+
+        .btn:hover {
+            background-color: #333;
+            color: #fff;
+        }
+
+        /* Thunder clouds effect */
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            20% { transform: translateX(5px) translateY(-5px); }
+            40% { transform: translateX(-5px) translateY(5px); }
+            60% { transform: translateX(5px) translateY(-5px); }
+            80% { transform: translateX(-5px) translateY(5px); }
+            100% { transform: translateX(0); }
+        }
+
+        .thunder-clouds {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: url('path_to_your_clouds_image.jpg');
+            background-size: cover;
+            animation: shake 0.5s;
+            pointer-events: none; /* Prevent interaction with the clouds */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Will You Marry Me?</h1>
+        <p>Click on your answer:</p>
+        <button class="btn btn-yes" id="yesBtn">Yes</button>
+        <button class="btn btn-no" id="noBtn">No</button>
+        <div class="thunder-clouds"></div>
+    </div>
+
+    <!-- Add an <audio> element for the thunder sound -->
+    <audio id="thunderSound">
+        <source src="path_to_your_thunder_sound.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script>
+        const yesBtn = document.getElementById("yesBtn");
+        const noBtn = document.getElementById("noBtn");
+        let noButtonClicks = 0;
+
+        function playThunderSound() {
+            const thunderSound = document.getElementById("thunderSound");
+            thunderSound.play();
+        }
+
+        function changeNoButtonColor() {
+            const colors = ["red-bg", "green-bg"];
+            const currentColor = noBtn.classList.contains("red-bg") ? "red-bg" : "green-bg";
+            const newColor = colors.find(color => color !== currentColor);
+            noBtn.classList.remove(currentColor);
+            noBtn.classList.add(newColor);
+        }
+
+        function moveNoButton() {
+            noButtonClicks++;
+            const movementAmount = 10 * noButtonClicks;
+            noBtn.style.transform = `translateX(${movementAmount}px)`;
+        }
+
+        function shakePage() {
+            document.body.style.animation = 'shake 0.5s';
+            setTimeout(() => {
+                document.body.style.animation = '';
+            }, 500);
+        }
+
+        yesBtn.addEventListener("click", () => {
+            const container = document.querySelector(".container");
+            container.innerHTML = '<h1>Congratulations!</h1><p>You said YES! 🎉🎈</p>';
+            const balloons = document.createElement("div");
+            balloons.className = "balloons";
+            container.appendChild(balloons);
+        });
+
+        noBtn.addEventListener("click", () => {
+            playThunderSound();
+            shakePage();
+            const container = document.querySelector(".container");
+            let repeats = 2;
+            const interval = setInterval(() => {
+                if (repeats > 0) {
+                    container.innerHTML = `<h1>Will You Marry Me?</h1><p>Click on your answer:</p><button class="btn btn-yes" id="yesBtn">Yes</button><button class="btn btn-no ${noBtn.classList}">No</button>`;
+                    changeNoButtonColor();
+                    moveNoButton();
+                    repeats--;
+                } else {
+                    clearInterval(interval);
+                    container.innerHTML = '<h1>Bhak, Maa Chudao.</h1><p>Feel free to change your mind anytime!</p>';
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
